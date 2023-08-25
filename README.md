@@ -1,0 +1,2 @@
+# eksiscraper
+Eksi Sozluk Scraper
