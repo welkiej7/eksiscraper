@@ -1,13 +1,24 @@
 get_sol_frame <- function(){
-  url <- "https://eksisozluk1923.com"
-  frame.attr <- read_html(url)%>%html_nodes('#partial-index > ul')%>%
-    html_elements("a")%>%html_attrs() 
-  frame.attr <- unlist(frame.attr)
-  results <- as.data.frame(matrix(NA_real_, nrow = length(frame.attr), ncol = 2))
-  colnames(results) <- c("Topic","Identifier")
-  for(row in 1:length(frame.attr)){
-    frame.attr[row] <- stringr::str_remove_all(frame.attr[row], pattern = fixed("?a=popular"))
-    results[row,] <- stringr::str_split_fixed(frame.attr[row], pattern = "--", n = 2)
-  }
-  return(results)
+rvest::read_html("https://eksisozluk1923.com") -> content.html
+content.html%>%
+html_elements(xpath = "/html[1]/body[1]/div[2]/div[1]/nav[1]/ul[1]")%>%
+rvest::html_text()  -> frame
+
+stringr::str_remove_all(frame, '\n') -> frame
+frame%>%stringr::str_split("\r") -> frame
+frame[[1]] -> frame
+sol_frame_fin <- c()
+for(i in 1:length(frame)){
+    if(stringr::str_count(frame[i]) >= 13 ){
+    sol_frame_fin <- append(sol_frame_fin, frame[i], after = 1)
+    } 
+}
+return(sol_frame_fin)
+}
+
+get_sol_frame_links <- function(){
+    url <- "https://eksisozluk1923.com"
+    read_html(url)%>%html_nodes('#partial-index > ul')%>%
+    html_elements("a")%>%html_attrs() -> frame.attr
+    return(unlist(frame.attr))
 }
