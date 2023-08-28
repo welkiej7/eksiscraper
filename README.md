@@ -1,8 +1,9 @@
 # Eksi Sözlük Scraper
 
 
+![Unknown](https://github.com/welkiej7/eksiscraper/assets/94485797/7f9034ff-1c00-41e6-b25c-68c3659b7761)
 
-![Ekşi_Sözlük_ikon svg](https://github.com/welkiej7/eksiscraper/assets/94485797/5626c533-2150-4c98-b63c-5d29829b477d)
+
 
 The main idea behind this project is to retrieve eksi sözlük data as automated and fast as possible.  It includes 3 fundamental functions and one script for automation, all written in R. There is no eksisözlük API open to use, therefore the code is an html scraper. 
 
