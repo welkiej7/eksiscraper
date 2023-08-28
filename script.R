@@ -3,12 +3,8 @@ require(tidyverse)
 require(rvest)
 run.time <- 100 # An integer that defines the total number of iterations. 
 refresh.time <- 20 # An integer that defines the required minutes between iterations.
-schema.path <- "Schema Path" ###### SET THE SCHEMA PATH AS A FOLDER
-db.path <- "Data Path" ##### SET THE DATA PATH AS A FOLDER
-
-##### Onur Tuncay Bal, contact: onurtuncaybal@gmail.com
-
-
+schema.path <- "~/eksiscraper/Database"
+db.path <- "~/eksiscraper/Database/Data"
 
 #1. Functions.
 set_env <- function(main = "https://eksisozluk1923.com", db.create = FALSE, schema.path, db.path){
@@ -105,7 +101,8 @@ for(run in 1:run.time){
   ##Get the Topics
   current.frame <- get_sol_frame()
   for(topic in 1:nrow(current.frame)){
-    exists <- current.frame$Topic[topic] %in% schema$Topic
+    skip.to.next <- FALSE
+    tryCatch({exists <- current.frame$Topic[topic] %in% schema$Topic
     if(exists){
       schema <- readr::read_csv(paste(schema.path,"/schema.csv",sep = ""))
       entry.row <- which(schema$Identifier %in% current.frame$Identifier[topic])
@@ -136,7 +133,8 @@ for(run in 1:run.time){
       colnames(db.update) <- colnames(schema)
       schema <- rbind(db.update, schema)
       write.csv(schema, paste(schema.path,"/schema.csv",sep = ""), row.names = FALSE)
-    }
+    }}, error = function(e){skip.to.next <<- TRUE})
+    if(skip.to.next){next}
   }
   message("Waiting for refresh...")
   pbar <- txtProgressBar(min = 0, max = refresh.time, style = 3, char = "|**|")
